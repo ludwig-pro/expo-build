@@ -1,5 +1,6 @@
 import { Stack, Link } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import * as Sentry from 'sentry-expo';
 
 export default function Page() {
   return (
@@ -10,6 +11,17 @@ export default function Page() {
           <Text style={styles.title}>Hello World</Text>
           <Text style={styles.subtitle}>This is the first page of your app.</Text>
         </View>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            try {
+              throw new Error('Oops!');
+            } catch (error) {
+              Sentry.Native.captureException(error);
+            }
+          }}>
+          <Text style={styles.buttonText}>Sentry</Text>
+        </TouchableOpacity>
         <Link href={{ pathname: '/details', params: { name: 'Dan' } }} asChild>
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Show Details</Text>
